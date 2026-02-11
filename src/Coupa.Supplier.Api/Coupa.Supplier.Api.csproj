@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Coupa.Supplier.Application\Coupa.Supplier.Application.csproj" />
+    <ProjectReference Include="..\Coupa.Supplier.Infrastructure\Coupa.Supplier.Infrastructure.csproj" />
+    <ProjectReference Include="..\Coupa.Supplier.Shared\Coupa.Supplier.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+  </ItemGroup>
+</Project>

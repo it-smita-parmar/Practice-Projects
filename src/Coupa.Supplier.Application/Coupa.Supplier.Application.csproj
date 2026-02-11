@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Coupa.Supplier.Domain\Coupa.Supplier.Domain.csproj" />
+    <ProjectReference Include="..\Coupa.Supplier.Shared\Coupa.Supplier.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
+  </ItemGroup>
+</Project>
