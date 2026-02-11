@@ -1,14 +1,20 @@
 using CoupaInvoiceIngestion.Api.Application.Abstractions;
 using CoupaInvoiceIngestion.Api.Contracts;
+using CoupaInvoiceIngestion.Api.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CoupaInvoiceIngestion.Api.Application.Services;
 
 public sealed class InvoiceSyncService(
     ICoupaClient coupaClient,
-    IInvoiceSinkRouter sinkRouter,
-    IEnumerable<IInvoiceProcessingMiddleware> middlewares) : IInvoiceSyncService
+    IInvoiceMappingEngine mappingEngine,
+    IEnumerable<ITargetPersister> persisters,
+    IOptions<TargetRoutingOptions> routingOptions) : IInvoiceSyncService
 {
-    private readonly IReadOnlyList<IInvoiceProcessingMiddleware> _middlewares = middlewares.ToList();
+    private readonly IReadOnlyDictionary<string, ITargetPersister> _persisters = persisters
+        .ToDictionary(x => x.Type, StringComparer.OrdinalIgnoreCase);
+
+    private readonly TargetRoutingOptions _routing = routingOptions.Value;
 
     public async Task<SyncInvoicesResponse> SyncInvoicesAsync(CancellationToken cancellationToken)
     {
@@ -18,14 +24,22 @@ public sealed class InvoiceSyncService(
 
         foreach (var invoice in invoices)
         {
-            await ExecutePipelineAsync(invoice, cancellationToken);
+            var matchedTargets = _routing.Targets.Where(target =>
+                (target.Regions.Count == 0 || target.Regions.Contains(invoice.Region.Value, StringComparer.OrdinalIgnoreCase)) &&
+                (target.Sources.Count == 0 || target.Sources.Contains(invoice.SourceSystem, StringComparer.OrdinalIgnoreCase)));
 
-            var sinks = sinkRouter.ResolveSinks(invoice);
-            foreach (var sink in sinks)
+            foreach (var target in matchedTargets)
             {
-                await sink.PersistAsync(invoice, cancellationToken);
+                if (!_persisters.TryGetValue(target.Type, out var persister))
+                {
+                    throw new InvalidOperationException($"No persister registered for target type '{target.Type}'.");
+                }
+
+                var payload = mappingEngine.Map(invoice, target.ProfileName);
+                await persister.PersistAsync(target, payload, cancellationToken);
+
                 persisted++;
-                persistedByTarget[sink.Name] = persistedByTarget.TryGetValue(sink.Name, out var count) ? count + 1 : 1;
+                persistedByTarget[target.Name] = persistedByTarget.TryGetValue(target.Name, out var count) ? count + 1 : 1;
             }
         }
 
@@ -34,22 +48,5 @@ public sealed class InvoiceSyncService(
             persisted,
             "Invoices were fetched from Coupa and inserted into configured staging targets.",
             persistedByTarget);
-    }
-
-    private Task ExecutePipelineAsync(Domain.Entities.Invoice invoice, CancellationToken cancellationToken)
-    {
-        var index = -1;
-        Task Next()
-        {
-            index++;
-            if (index >= _middlewares.Count)
-            {
-                return Task.CompletedTask;
-            }
-
-            return _middlewares[index].InvokeAsync(invoice, Next, cancellationToken);
-        }
-
-        return Next();
     }
 }

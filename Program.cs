@@ -5,8 +5,6 @@ using CoupaInvoiceIngestion.Api.Infrastructure.Clients;
 using CoupaInvoiceIngestion.Api.Infrastructure.Configuration;
 using CoupaInvoiceIngestion.Api.Infrastructure.Mapping;
 using CoupaInvoiceIngestion.Api.Infrastructure.Persistence.Oracle;
-using CoupaInvoiceIngestion.Api.Infrastructure.Routing;
-using CoupaInvoiceIngestion.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +18,10 @@ builder.Services.Configure<OracleTargetsOptions>(builder.Configuration.GetSectio
 
 builder.Services.AddHttpClient<ICoupaClient, CoupaClient>();
 builder.Services.AddSingleton<IOracleConnectionFactory, OracleConnectionFactory>();
-builder.Services.AddScoped<IInvoiceSyncService, InvoiceSyncService>();
-builder.Services.AddScoped<IInvoiceSinkRouter, InvoiceSinkRouter>();
 builder.Services.AddSingleton<IInvoiceMappingEngine, InvoiceMappingEngine>();
-builder.Services.AddScoped<IInvoiceMappedPayloadStore, InvoiceMappedPayloadStore>();
-builder.Services.AddScoped<IInvoiceProcessingMiddleware, InvoiceMappingMiddleware>();
+builder.Services.AddScoped<IInvoiceSyncService, InvoiceSyncService>();
+builder.Services.AddScoped<ITargetPersister, OracleTargetPersister>();
+builder.Services.AddScoped<ITargetPersister, DynamicsTargetPersister>();
 
 var app = builder.Build();
 
