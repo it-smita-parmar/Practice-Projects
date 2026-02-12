@@ -1,0 +1,12 @@
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\bin\Debug\net10.0\Coupa.Supplier.Domain.deps.json
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\bin\Debug\net10.0\Coupa.Supplier.Domain.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\bin\Debug\net10.0\Coupa.Supplier.Domain.pdb
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.AssemblyInfoInputs.cache
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.AssemblyInfo.cs
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.csproj.CoreCompileInputs.cache
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.sourcelink.json
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\refint\Coupa.Supplier.Domain.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\Coupa.Supplier.Domain.pdb
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Domain\obj\Debug\net10.0\ref\Coupa.Supplier.Domain.dll

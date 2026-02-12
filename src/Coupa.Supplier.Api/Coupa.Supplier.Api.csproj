@@ -8,5 +8,6 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="*" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="*" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="*" />
   </ItemGroup>
 </Project>

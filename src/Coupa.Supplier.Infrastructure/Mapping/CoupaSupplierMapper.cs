@@ -1,4 +1,8 @@
+using System;
+using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Coupa.Supplier.Domain.Entities;
 using Coupa.Supplier.Domain.ValueObjects;
 
@@ -9,7 +13,30 @@ public sealed class CoupaSupplierMapper(IMappingConfigProvider mappingConfigProv
     public async Task<SupplierAggregate> MapAsync(JsonElement element, CancellationToken cancellationToken)
     {
         var mapping = await mappingConfigProvider.GetAsync(cancellationToken);
-        var supplierTable = mapping.Tables.First(x => x.Alias == "SUPPLIERS");
+        if (mapping is null)
+        {
+            throw new InvalidOperationException("Mapping configuration returned null from IMappingConfigProvider.GetAsync.");
+        }
+
+        var supplierTable = mapping.Tables
+            .FirstOrDefault(x => string.Equals(x.Alias, "SUPPLIERS", StringComparison.OrdinalIgnoreCase));
+
+        if (supplierTable is null)
+        {
+            var availableAliases = mapping.Tables?
+                .Select(t => t.Alias)
+                .Where(a => !string.IsNullOrWhiteSpace(a))
+                .Distinct()
+                .Take(20)
+                .ToArray();
+
+            var available = availableAliases != null && availableAliases.Length > 0
+                ? string.Join(", ", availableAliases)
+                : "none";
+
+            throw new InvalidOperationException(
+                $"Mapping table with alias 'SUPPLIERS' not found in mapping configuration. Available aliases: {available}");
+        }
 
         var supplier = new SupplierAggregate
         {
@@ -38,7 +65,7 @@ public sealed class CoupaSupplierMapper(IMappingConfigProvider mappingConfigProv
                 PoChangeMethod = GetString(x, "$.po-change-method"),
                 Active = GetBool(x, "$.active")
             }).ToList()
-            : [];
+            : Array.Empty<SupplierSite>();
 
     private static IReadOnlyCollection<SupplierContact> MapContacts(JsonElement supplier)
         => supplier.TryGetProperty("contacts", out var contacts)
@@ -47,7 +74,7 @@ public sealed class CoupaSupplierMapper(IMappingConfigProvider mappingConfigProv
                 ContactId = GetLong(x, "$.id"),
                 Kind = "PRIMARY"
             }).ToList()
-            : [];
+            : Array.Empty<SupplierContact>();
 
     private static IReadOnlyCollection<SupplierAddress> MapAddresses(JsonElement supplier)
         => supplier.TryGetProperty("supplier-addresses", out var addresses)
@@ -58,7 +85,7 @@ public sealed class CoupaSupplierMapper(IMappingConfigProvider mappingConfigProv
                 StateIsoCode = GetString(x, "$.state-iso-code"),
                 Active = GetBool(x, "$.active")
             }).ToList()
-            : [];
+            : Array.Empty<SupplierAddress>();
 
     private static IReadOnlyCollection<RemitToAddress> MapRemitTo(JsonElement supplier)
         => supplier.TryGetProperty("remit-to-addresses", out var addresses)
@@ -75,7 +102,7 @@ public sealed class CoupaSupplierMapper(IMappingConfigProvider mappingConfigProv
                 Active = GetBool(x, "$.active"),
                 Country = new CoupaCountry(GetString(x, "$.country.code"), GetString(x, "$.country.name"))
             }).ToList()
-            : [];
+            : Array.Empty<RemitToAddress>();
 
     private static string? GetString(JsonElement element, string sourcePath)
     {

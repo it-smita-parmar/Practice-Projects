@@ -5,6 +5,7 @@ using Coupa.Supplier.Application.Abstractions;
 using Coupa.Supplier.Application.Configuration;
 using Coupa.Supplier.Infrastructure.DependencyInjection;
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

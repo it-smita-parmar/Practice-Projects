@@ -2,6 +2,7 @@ using Coupa.Supplier.Application.Configuration;
 using Coupa.Supplier.Infrastructure.Mapping;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
+using Xunit;
 
 namespace Coupa.Supplier.Infrastructure.Tests.Mapping;
 

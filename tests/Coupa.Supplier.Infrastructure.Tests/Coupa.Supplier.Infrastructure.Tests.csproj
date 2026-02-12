@@ -21,4 +21,17 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options" Version="*" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="config\coupa-mapping.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
