@@ -1,0 +1,47 @@
+{
+  "integrationName": "coupa-supplier-inbound",
+  "direction": "Inbound",
+  "processingMode": "Bulk",
+  "batchSize": 500,
+  "degreeOfParallelism": 4,
+  "source": {
+    "type": "Coupa",
+    "endpoint": "/api/suppliers",
+    "headers": {
+      "Authorization": "Bearer {{COUPA_TOKEN}}"
+    }
+  },
+  "target": {
+    "type": "OracleIndia",
+    "connectionString": "{{ORACLE_INDIA_CONNECTION}}"
+  },
+  "mapping": {
+    "tables": [
+      {
+        "tableName": "xxfin.xxfin_coupa_suppliers",
+        "alias": "SUPPLIERS",
+        "collectionPath": "$",
+        "primaryKey": "STG_ID",
+        "generatePrimaryKey": "sequence(XXFIN_SUPP_STG_SEQ)",
+        "fields": [
+          { "sourcePath": "$.id", "targetColumn": "SUPPLIER_ID", "isRequired": true, "dataType": "number" },
+          { "sourcePath": "upper($.name)", "targetColumn": "NAME", "isRequired": true, "dataType": "string", "maxLength": 500 },
+          { "sourcePath": "$.status", "targetColumn": "STATUS", "dataType": "string" },
+          { "sourcePath": "constant(COUPA)", "targetColumn": "SOURCE", "dataType": "string" },
+          { "sourcePath": "now()", "targetColumn": "CREATION_DATE", "dataType": "datetime" }
+        ]
+      },
+      {
+        "tableName": "xxfin.xxfin_coupa_supp_sites",
+        "alias": "SUPPLIER_SITES",
+        "collectionPath": "$.supplier-sites[*]",
+        "parentAlias": "SUPPLIERS",
+        "parentKeyColumn": "STG_ID",
+        "fields": [
+          { "sourcePath": "$.id", "targetColumn": "SITE_ID", "isRequired": true, "dataType": "number" },
+          { "sourcePath": "concat($.name,'-',$.code)", "targetColumn": "NAME", "dataType": "string" }
+        ]
+      }
+    ]
+  }
+}
