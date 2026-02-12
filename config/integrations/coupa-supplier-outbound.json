@@ -1,0 +1,33 @@
+{
+  "integrationName": "coupa-supplier-outbound",
+  "direction": "Outbound",
+  "processingMode": "Single",
+  "batchSize": 100,
+  "degreeOfParallelism": 2,
+  "source": {
+    "type": "SqlServer",
+    "query": "SELECT SupplierId, Name, Status FROM dbo.SupplierOutboundQueue",
+    "connectionString": "{{SQLSERVER_SOURCE_CONNECTION}}"
+  },
+  "target": {
+    "type": "Coupa",
+    "endpoint": "@CoupaSuppliersPut",
+    "headers": {
+      "Authorization": "Bearer {{COUPA_TOKEN}}"
+    }
+  },
+  "mapping": {
+    "tables": [
+      {
+        "tableName": "supplier",
+        "alias": "SUPPLIER",
+        "collectionPath": "$",
+        "fields": [
+          { "sourcePath": "$.SupplierId", "targetColumn": "id", "isRequired": true, "dataType": "number" },
+          { "sourcePath": "$.Name", "targetColumn": "name", "isRequired": true, "dataType": "string" },
+          { "sourcePath": "$.Status", "targetColumn": "status", "dataType": "string" }
+        ]
+      }
+    ]
+  }
+}

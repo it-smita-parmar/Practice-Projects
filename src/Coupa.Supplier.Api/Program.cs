@@ -4,6 +4,7 @@ using Coupa.Supplier.Api.Extensions;
 using Coupa.Supplier.Application.Abstractions;
 using Coupa.Supplier.Application.Configuration;
 using Coupa.Supplier.Infrastructure.DependencyInjection;
+using Coupa.Supplier.Infrastructure.IntegrationEngine.DependencyInjection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks().AddDbContextCheck<Coupa.Supplier.Infrastructure.Persistence.SupplierDbContext>();
 builder.Services.AddValidatorsFromAssemblyContaining<SupplierSyncRequestValidator>();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddIntegrationEngine(builder.Configuration);
 
 var app = builder.Build();
 app.UseCustomMiddleware();
