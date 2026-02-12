@@ -1,0 +1,81 @@
+{
+  "entity": "CoupaSupplier",
+  "version": "1.1",
+  "direction": "CoupaToOracle",
+  "sourceRootPath": "$",
+  "batchSize": 1000,
+  "tables": [
+    {
+      "tableName": "xxfin.xxfin_coupa_suppliers",
+      "alias": "SUPPLIERS",
+      "collectionPath": "$",
+      "primaryKey": "STG_ID",
+      "generatePrimaryKey": "sequence:XXFIN_SUPP_STG_SEQ",
+      "fields": [
+        { "sourcePath": "$.id", "targetColumn": "SUPPLIER_ID", "isRequired": true, "dataType": "number" },
+        { "sourcePath": "$.name", "targetColumn": "NAME", "isRequired": true, "dataType": "string", "maxLength": 500 },
+        { "sourcePath": "$.status", "targetColumn": "STATUS", "dataType": "string" },
+        { "sourcePath": "constant('COUPA')", "targetColumn": "SOURCE", "dataType": "string" }
+      ]
+    },
+    {
+      "tableName": "xxfin.xxfin_coupa_supp_sites",
+      "alias": "SUPPLIER_SITES",
+      "collectionPath": "$.supplier-sites[*]",
+      "parentAlias": "SUPPLIERS",
+      "parentKeyColumn": "STG_ID",
+      "fields": [
+        { "sourcePath": "$.id", "targetColumn": "SITE_ID", "isRequired": true, "dataType": "number" },
+        { "sourcePath": "$.code", "targetColumn": "CODE", "dataType": "string" },
+        { "sourcePath": "$.name", "targetColumn": "NAME", "dataType": "string" },
+        { "sourcePath": "$.po-method", "targetColumn": "PO_METHOD", "dataType": "string" },
+        { "sourcePath": "$.po-change-method", "targetColumn": "PO_CHANGE_METHOD", "dataType": "string" },
+        { "sourcePath": "$.active", "targetColumn": "ACTIVE", "dataType": "string" }
+      ]
+    },
+    {
+      "tableName": "xxfin.xxfin_coupa_supp_contacts",
+      "alias": "SUPPLIER_CONTACTS",
+      "collectionPath": "$.contacts[*]",
+      "parentAlias": "SUPPLIERS",
+      "parentKeyColumn": "STG_ID",
+      "fields": [
+        { "sourcePath": "$.id", "targetColumn": "CONTACT_ID", "isRequired": true, "dataType": "number" },
+        { "sourcePath": "constant('PRIMARY')", "targetColumn": "KIND", "dataType": "string" }
+      ]
+    },
+    {
+      "tableName": "xxfin.xxfin_coupa_supp_adds",
+      "alias": "SUPPLIER_ADDRESSES",
+      "collectionPath": "$.supplier-addresses[*]",
+      "parentAlias": "SUPPLIERS",
+      "parentKeyColumn": "STG_ID",
+      "fields": [
+        { "sourcePath": "$.id", "targetColumn": "ADDRESS_ID", "dataType": "number" },
+        { "sourcePath": "$.location-code", "targetColumn": "LOCATION_CODE", "dataType": "string" },
+        { "sourcePath": "$.state-iso-code", "targetColumn": "STATE_ISO_CODE", "dataType": "string" },
+        { "sourcePath": "$.active", "targetColumn": "ACTIVE", "dataType": "string" }
+      ]
+    },
+    {
+      "tableName": "xxfin.xxfin_coupa_supp_remit_to_adds",
+      "alias": "SUPPLIER_REMIT_TO",
+      "collectionPath": "$.remit-to-addresses[*]",
+      "parentAlias": "SUPPLIERS",
+      "parentKeyColumn": "STG_ID",
+      "fields": [
+        { "sourcePath": "$.id", "targetColumn": "REMIT_TO_ADDRESS_ID", "dataType": "number" },
+        { "sourcePath": "$.remit-to-code", "targetColumn": "REMIT_TO_CODE", "dataType": "string" },
+        { "sourcePath": "$.name", "targetColumn": "NAME", "dataType": "string" },
+        { "sourcePath": "$.street1", "targetColumn": "STREET1", "dataType": "string" },
+        { "sourcePath": "$.street2", "targetColumn": "STREET2", "dataType": "string" },
+        { "sourcePath": "$.city", "targetColumn": "CITY", "dataType": "string" },
+        { "sourcePath": "$.state", "targetColumn": "STATE", "dataType": "string" },
+        { "sourcePath": "$.postal-code", "targetColumn": "POSTAL_CODE", "dataType": "string" },
+        { "sourcePath": "$.country.code", "targetColumn": "COUNTRY_CODE", "dataType": "string" },
+        { "sourcePath": "$.country.name", "targetColumn": "COUNTRY_NAME", "dataType": "string" },
+        { "sourcePath": "$.active", "targetColumn": "ACTIVE", "dataType": "string" }
+      ]
+    }
+  ]
+}

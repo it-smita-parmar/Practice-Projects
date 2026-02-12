@@ -1,0 +1,12 @@
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\bin\Debug\net10.0\Coupa.Supplier.Shared.deps.json
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\bin\Debug\net10.0\Coupa.Supplier.Shared.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\bin\Debug\net10.0\Coupa.Supplier.Shared.pdb
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.AssemblyInfoInputs.cache
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.AssemblyInfo.cs
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.csproj.CoreCompileInputs.cache
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.sourcelink.json
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\refint\Coupa.Supplier.Shared.dll
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\Coupa.Supplier.Shared.pdb
+C:\Users\itsmi\source\repos\it-smita-parmar\Practice-Projects\src\Coupa.Supplier.Shared\obj\Debug\net10.0\ref\Coupa.Supplier.Shared.dll
