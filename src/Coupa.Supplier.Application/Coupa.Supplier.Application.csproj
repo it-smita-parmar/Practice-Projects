@@ -4,7 +4,7 @@
     <ProjectReference Include="..\Coupa.Supplier.Shared\Coupa.Supplier.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.10.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
+    <PackageReference Include="FluentValidation" Version="*" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="*" />
   </ItemGroup>
 </Project>

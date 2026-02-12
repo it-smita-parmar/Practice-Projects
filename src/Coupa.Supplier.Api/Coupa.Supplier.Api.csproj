@@ -5,8 +5,8 @@
     <ProjectReference Include="..\Coupa.Supplier.Shared\Coupa.Supplier.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="*" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="*" />
   </ItemGroup>
 </Project>

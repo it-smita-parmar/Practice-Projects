@@ -74,3 +74,14 @@ Store secret names such as:
 - New target requires new `ITargetSupplierRepository` implementation.
 - Bi-directional APIs can be added by introducing reverse use-cases in application layer.
 - Multiple Oracle schemas can be selected with additional named repositories/strategies.
+
+## Mapping Unit Tests (No DB Calls)
+- `tests/Coupa.Supplier.Infrastructure.Tests` includes unit tests for:
+  - `CoupaSupplierMapper` mapping behavior using Coupa JSON samples.
+  - `JsonMappingConfigProvider` loading + caching behavior.
+- These tests only deserialize JSON and map domain objects; they do **not** open Oracle connections.
+
+Run:
+```bash
+dotnet test Coupa.Supplier.sln
+```
