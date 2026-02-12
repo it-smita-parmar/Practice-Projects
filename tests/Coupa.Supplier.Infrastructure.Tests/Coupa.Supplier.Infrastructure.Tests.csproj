@@ -6,6 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Coupa.Supplier.Infrastructure\Coupa.Supplier.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Coupa.Supplier.Application\Coupa.Supplier.Application.csproj" />
+    <ProjectReference Include="..\..\src\Coupa.Supplier.Api\Coupa.Supplier.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="*" />
@@ -20,6 +21,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options" Version="*" />
+    <PackageReference Include="Moq" Version="*" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\**\*">
