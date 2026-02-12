@@ -56,6 +56,7 @@ Run an integration dynamically by name:
 
 ```http
 POST /api/integration/run/{integrationName}
+POST /api/integration/outbound/{integrationName}
 ```
 
 Example:
@@ -99,3 +100,7 @@ This wires configuration provider, mapping engine, all provider strategies, fact
 - Polly retries on outbound HTTP providers
 - Batch + parallel bulk execution
 - Factory-driven extensibility for adding new sources/targets without changing orchestration logic
+
+
+## Endpoint URL configuration
+API endpoint paths for Coupa/MS Dynamics are resolved from `appsettings.json` (`IntegrationEngine:ApiEndpoints`) using symbolic values in integration config (e.g., `"endpoint": "@CoupaSuppliersGet"`).

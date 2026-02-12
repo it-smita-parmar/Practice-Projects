@@ -8,6 +8,7 @@ using Coupa.Supplier.Infrastructure.IntegrationEngine.Providers.Sources;
 using Coupa.Supplier.Infrastructure.IntegrationEngine.Providers.Targets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -19,9 +20,35 @@ public static class IntegrationEngineServiceCollectionExtensions
     {
         services.Configure<IntegrationEngineOptions>(configuration.GetSection(IntegrationEngineOptions.SectionName));
 
-        services.AddHttpClient(nameof(CoupaSourceProvider)).AddPolicyHandler(GetRetryPolicy());
-        services.AddHttpClient(nameof(CoupaTargetProvider)).AddPolicyHandler(GetRetryPolicy());
-        services.AddHttpClient(nameof(MSDynamicsTargetProvider)).AddPolicyHandler(GetRetryPolicy());
+        services.AddHttpClient(nameof(CoupaSourceProvider), (provider, client) =>
+            {
+                var options = provider.GetRequiredService<IOptions<IntegrationEngineOptions>>().Value;
+                if (!string.IsNullOrWhiteSpace(options.CoupaBaseUrl))
+                {
+                    client.BaseAddress = new Uri(options.CoupaBaseUrl);
+                }
+            })
+            .AddPolicyHandler(GetRetryPolicy());
+
+        services.AddHttpClient(nameof(CoupaTargetProvider), (provider, client) =>
+            {
+                var options = provider.GetRequiredService<IOptions<IntegrationEngineOptions>>().Value;
+                if (!string.IsNullOrWhiteSpace(options.CoupaBaseUrl))
+                {
+                    client.BaseAddress = new Uri(options.CoupaBaseUrl);
+                }
+            })
+            .AddPolicyHandler(GetRetryPolicy());
+
+        services.AddHttpClient(nameof(MSDynamicsTargetProvider), (provider, client) =>
+            {
+                var options = provider.GetRequiredService<IOptions<IntegrationEngineOptions>>().Value;
+                if (!string.IsNullOrWhiteSpace(options.MsDynamicsBaseUrl))
+                {
+                    client.BaseAddress = new Uri(options.MsDynamicsBaseUrl);
+                }
+            })
+            .AddPolicyHandler(GetRetryPolicy());
 
         services.AddSingleton<IIntegrationConfigProvider, FileIntegrationConfigProvider>();
         services.AddSingleton<ISequenceGenerator, InMemorySequenceGenerator>();

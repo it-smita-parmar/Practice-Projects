@@ -15,4 +15,12 @@ public sealed class IntegrationController(IIntegrationOrchestrator orchestrator)
         var result = await orchestrator.RunAsync(integrationName, cancellationToken);
         return Ok(result);
     }
+
+    [HttpPost("outbound/{integrationName}")]
+    [ProducesResponseType(typeof(IntegrationRunResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> RunOutbound([FromRoute] string integrationName, CancellationToken cancellationToken)
+    {
+        var result = await orchestrator.RunAsync(integrationName, cancellationToken);
+        return Ok(result);
+    }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json.Nodes;
 using Coupa.Supplier.Domain.IntegrationEngine.Abstractions;
 using Coupa.Supplier.Domain.IntegrationEngine.Models;
@@ -18,70 +19,58 @@ public sealed class IntegrationOrchestrator(
         var config = await integrationConfigProvider.GetByNameAsync(integrationName, cancellationToken);
         var sourceProvider = sourceProviderFactory.Resolve(config.Source.Type);
         var targetProvider = targetProviderFactory.Resolve(config.Target.Type);
+        var records = await sourceProvider.GetDataAsync(config.Source, cancellationToken);
 
-        var data = await sourceProvider.GetDataAsync(config.Source, cancellationToken);
-
-        var errors = new List<RecordError>();
-        var success = 0;
+        var errors = new ConcurrentBag<RecordError>();
+        var successCount = 0;
 
         if (config.ProcessingMode.Equals("Single", StringComparison.OrdinalIgnoreCase))
         {
-            foreach (var record in data)
+            foreach (var record in records.Where(r => r is not null))
             {
-                if (record is null)
+                if (!await TryProcessRecordAsync(record!, config, targetProvider, errors, cancellationToken))
                 {
-                    continue;
-                }
-
-                var failed = await ProcessRecordAsync(record, config, targetProvider, errors, cancellationToken);
-                if (!failed)
-                {
-                    success++;
+                    successCount++;
                 }
             }
         }
         else
         {
-            var batches = data.Chunk(config.BatchSize).ToArray();
             var parallelOptions = new ParallelOptions
             {
                 CancellationToken = cancellationToken,
                 MaxDegreeOfParallelism = Math.Max(1, config.DegreeOfParallelism)
             };
 
-            await Parallel.ForEachAsync(batches, parallelOptions, async (batch, ct) =>
-            {
-                foreach (var record in batch)
+            await Parallel.ForEachAsync(records.Where(r => r is not null).Chunk(Math.Max(1, config.BatchSize)), parallelOptions,
+                async (batch, ct) =>
                 {
-                    if (record is null)
+                    foreach (var record in batch)
                     {
-                        continue;
+                        if (!await TryProcessRecordAsync(record!, config, targetProvider, errors, ct))
+                        {
+                            Interlocked.Increment(ref successCount);
+                        }
                     }
-
-                    var failed = await ProcessRecordAsync(record, config, targetProvider, errors, ct);
-                    if (!failed)
-                    {
-                        Interlocked.Increment(ref success);
-                    }
-                }
-            });
+                });
         }
 
-        return new IntegrationRunResult(config.IntegrationName, data.Count, success, errors.Count, errors);
+        return new IntegrationRunResult(config.IntegrationName, records.Count, successCount, errors.Count, errors.ToArray());
     }
 
-    private async Task<bool> ProcessRecordAsync(
+    private async Task<bool> TryProcessRecordAsync(
         JsonNode record,
         IntegrationConfiguration config,
         ITargetProvider targetProvider,
-        List<RecordError> errors,
+        ConcurrentBag<RecordError> errors,
         CancellationToken cancellationToken)
     {
         try
         {
             var mappedData = mappingEngine.Transform(record, config.Mapping);
+            var useBulk = config.ProcessingMode.Equals("Bulk", StringComparison.OrdinalIgnoreCase);
 
-            if (config.ProcessingMode.Equals("Bulk", StringComparison.OrdinalIgnoreCase))
+            if (useBulk)
             {
                 await targetProvider.InsertBulkAsync(config.Target, mappedData, cancellationToken);
             }
@@ -105,11 +94,7 @@ public sealed class IntegrationOrchestrator(
                 CreatedDate = DateTime.UtcNow
             };
 
-            lock (errors)
-            {
-                errors.Add(error);
-            }
-
+            errors.Add(error);
             logger.LogError(ex, "Record processing failed for {IntegrationName}", config.IntegrationName);
             await errorLogService.LogAsync(error, cancellationToken);
             return true;
